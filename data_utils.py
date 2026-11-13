@@ -5,8 +5,9 @@ import pandas as pd
 import streamlit as st
 
 BASE_DIR = Path(__file__).resolve().parent
-RAW_DIR = BASE_DIR / "data" / "raw"
-PROCESSED_DIR = BASE_DIR / "data" / "processed"
+BASE_DIR = Path(__file__).resolve().parent
+RAW_DIR = BASE_DIR
+PROCESSED_DIR = BASE_DIR
 
 
 def _read_csv(name: str, required: set[str]) -> pd.DataFrame:
