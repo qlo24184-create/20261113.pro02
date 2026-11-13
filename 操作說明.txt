@@ -1,0 +1,24 @@
+﻿專案2：電商分析與預測
+
+一、環境與啟動
+1. 使用 Python 3.12 以上版本。
+2. 在 classCode 資料夾開啟 PowerShell，執行：
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   python -m pip install -r requirements.txt
+   python prepare_data.py
+   python train_models.py
+   streamlit run app.py
+3. 瀏覽器開啟 Streamlit 顯示的網址，透過左側導覽切換三個頁面。
+
+二、頁面說明
+1. 資料狀態與視覺化：檢查缺值、重複值與整合明細，查看每月營收、客群營收及匯出資料。
+2. VIP 機率預測：選擇已訓練的羅吉斯迴歸或隨機森林，使用繁體中文欄位輸入顧客特徵，再按「資料輸入完成，開始預測 VIP」取得 VIP 機率與分類結果。
+3. 訂單金額預測：選擇已訓練的隨機森林或 XGBoost，使用繁體中文欄位輸入訂單及顧客特徵，再按「資料輸入完成，開始預測訂單金額」取得預測金額。
+
+三、資料定義與限制
+1. 原始 CSV 放在 data/raw/，包含 customers.csv、orders.csv、order_items.csv、products.csv。
+2. 整合輸出放在 data/processed/：integrated_sales.csv 為商品明細層級，order_features.csv 為訂單層級，customer_features.csv 為顧客層級，is_vip（1=VIP，0=非 VIP）為分類目標 y。
+3. 訂單金額 = 商品數量 × 單價 × (1 − 折扣率) 加總；不含運費、稅與退款。
+4. 迴歸只採 completed 訂單。VIP 分類目標是資料當下的 vip 標籤。資料未提供 VIP 狀態變更時間，所以模型結果不能解讀為未來升級預測。
+5. `train_models.py` 會預訓練並匯出 models/ 下的四個 joblib 模型。原始 CSV 更新後，依序重跑 `python prepare_data.py` 與 `python train_models.py`。
