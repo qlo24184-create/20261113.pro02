@@ -1,5 +1,7 @@
 """頁面三：載入預先訓練的迴歸器，使用中文欄位預測訂單金額。"""
 from pathlib import Path
+import subprocess
+import sys
 
 import joblib
 import pandas as pd
@@ -21,8 +23,9 @@ model_names = {"隨機森林": "order_random_forest.joblib", "XGBoost": "order_x
 choice = st.selectbox("迴歸模型", list(model_names))
 artifact_path = BASE_DIR / "models" / model_names[choice]
 if not artifact_path.exists():
-    st.error("尚未找到預先訓練的模型。請先在終端機執行 `python train_models.py`。")
-    st.stop()
+    with st.spinner("首次使用正在雲端訓練預測模型，稍後約15秒..."):
+         subprocess.run([sys.executable, "train_models.py"], cwd=BASE_DIR, check=True)
+    
 
 payment_options = sorted(orders["payment_type"].dropna().unique().tolist())
 city_options = sorted(customers["city"].dropna().unique().tolist())
